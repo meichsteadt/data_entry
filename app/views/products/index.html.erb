@@ -30,7 +30,7 @@
     <%= link_to edit_product_path(product) do %>
       <img src="<%= product.thumbnail %>" style="max-width:100%; height: 500px;">
     <% end %>
-    <%= form_for(product) do |f|%>
+    <%= form_for(product, remote: true) do |f|%>
     <div style="width: 50%; float: left;">
       <%= f.label :name %>
       <%= f.text_field :name %>
@@ -41,11 +41,12 @@
     </div>
     <div style="width: 50%; float: left;">
       <% Category.all.each do |category| %>
-        <%= check_box_tag "product[category_ids_#{category.id}][]", category.id, f.object.categories.include?(category) %>
-        <%= label_tag "product[category_ids_#{category.id}][]", category.name, style: "display: inline-block;" %>
+        <%= check_box_tag "product[category_ids][]", category.id, f.object.categories.include?(category), id: "product_#{product.id}_category_ids_#{category.id}" %>
+        <%= label_tag "product_#{product.id}_category_ids_#{category.id}", category.name, style: "display: inline-block;" %>
         <br>
       <% end %>
     </div>
+      <div id="product_<%= product.id %>"></div>
       <%= f.submit "Submit" %>
     <% end %>
     <p><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></p>
