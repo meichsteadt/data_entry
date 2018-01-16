@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<h1 style="text-align: center;">Products</h1>
+
+<div style="width: 25%; float: left;">
+  <h3>Brands</h3>
+  <p><%= link_to "All", "/products" %></p>
+  <p><%= link_to "Homelegance", "/products?brand=Homelegance" %></p>
+  <p><%= link_to "Furniture of America", "/products?brand=Furniture of America" %></p>
+</div>
+<div style="width: 25%; float: left;">
+  <h3>Prices</h3>
+  <p><%= link_to "All", "/products" %></p>
+  <p><%= link_to "No Prices", "/products?no_price=true" %></p>
+</div>
+
+<div style="display: table; content: ''; clear: both;"></div>
+
+<div style="float: left; text-align: center; width: 100%;">
+  <% @products.page(1).total_pages.times do |time| %>
+  <p style="display: inline-block; margin: 0;"><%= link_to (time + 1), "/products?#{params.permit!.except(:action, :controller, :page_number).to_query}&page_number=#{time + 1}" %> |</p>
+  <% end %>
+</div>
+
+<div style="display: table; content: ''; clear: both;"></div>
+
+<% @products.each do |product| %>
+  <div style="width: 33%; float: left; padding: 15px; box-sizing: border-box;">
+    <h2><%= product.name %></h2>
+    <%= link_to edit_product_path(product) do %>
+      <img src="<%= product.thumbnail %>" style="max-width:100%; height: 500px;">
+    <% end %>
+    <%= form_for(product) do |f|%>
+    <div style="width: 50%; float: left;">
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+      <%= f.label :description %>
+      <%= f.text_area :description %>
+      <%= f.label :price %>
+      <%= f.text_field :price %>
+    </div>
+    <div style="width: 50%; float: left;">
+      <% Category.all.each do |category| %>
+        <%= check_box_tag "product[category_ids_#{category.id}][]", category.id, f.object.categories.include?(category) %>
+        <%= label_tag "product[category_ids_#{category.id}][]", category.name, style: "display: inline-block;" %>
+        <br>
+      <% end %>
+    </div>
+      <%= f.submit "Submit" %>
+    <% end %>
+    <p><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></p>
+  </div>
+<% end %>
+
+<div style="float: left; width: 100%; text-align: center;">
+  <% @products.page(1).total_pages.times do |time| %>
+  <p style="display: inline-block; margin: 0;"><%= link_to (time + 1), "/products?#{params.permit!.except(:action, :controller, :page_number).to_query}&page_number=#{time + 1}" %> |</p>
+  <% end %>
+</div>
