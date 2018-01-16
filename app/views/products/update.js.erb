@@ -1,3 +1,4 @@
 $(function() {
-  $("#product_<%= @product.id %>").append("Product updated");
+  $("#product_submit_<%= @product.id %>").append("Product updated");
+  $("#product_<%= @product.id %>").remove();
 })

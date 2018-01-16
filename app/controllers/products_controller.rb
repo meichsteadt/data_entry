@@ -5,14 +5,21 @@ class ProductsController < ApplicationController
   # GET /products.json
   def index
     @products = Product.all
-    if params[:category]
+    if params[:category] && params[:category] != ""
+      @category = params[:category]
       @products = Category.find_by_name(params[:category]).products
     end
-    if params[:no_price]
-      @products = Product.where(price: nil)
+    if params[:no_price]  && params[:no_price] != ""
+      @no_price = true
+      @products = @products.where(price: nil)
     end
-    if params[:brand]
+    if params[:brand] && params[:brand] != ""
+      @brand = params[:brand]
       @products = @products.where(brand: params[:brand])
+    end
+    if params[:done] && params[:done] != ""
+      @done = true
+      @products = @products.where(done: true)
     end
     if params[:page]
       @products = @products.page(params[:page])
@@ -66,6 +73,7 @@ class ProductsController < ApplicationController
             @product.categories.push(Category.find(id))
           end
         end
+        @product.update(done: true)
         format.js
         format.html { redirect_to @product, notice: 'Product was successfully updated.' }
         format.json { render :show, status: :ok, location: @product }

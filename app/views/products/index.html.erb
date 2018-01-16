@@ -2,30 +2,39 @@
 
 <h1 style="text-align: center;">Products</h1>
 
-<div style="width: 25%; float: left;">
+<div style="width: 25%; float: left; margin-bottom: 40px;">
   <h3>Brands</h3>
-  <p><%= link_to "All", "/products" %></p>
-  <p><%= link_to "Homelegance", "/products?brand=Homelegance" %></p>
-  <p><%= link_to "Furniture of America", "/products?brand=Furniture of America" %></p>
+  <%= select_tag :brand, options_for_select([['All', nil], ["Homelegance", "Homelegance"], ["Furniture of America", "Furniture of America"]], selected: @brand), onchange: "window.location = '/products?#{params.permit!.except(:action, :controller, :brand).to_query}&brand=' + $(this).val();" %>
+</div>
+<div style="width: 25%; float: left;">
+  <h3>Category</h3>
+    <%= select_tag :category, options_for_select(Category.all.map {|e| e.name}.unshift(['All', nil]), selected: @category), onchange: "window.location = '/products?#{params.permit!.except(:action, :controller, :category).to_query}&category=' + $(this).val();" %>
 </div>
 <div style="width: 25%; float: left;">
   <h3>Prices</h3>
-  <p><%= link_to "All", "/products" %></p>
-  <p><%= link_to "No Prices", "/products?no_price=true" %></p>
+    <%= select_tag :brand, options_for_select([['All', nil], ["No Price", true]], selected: @no_price), onchange: "window.location = '/products?#{params.permit!.except(:action, :controller, :no_price).to_query}&no_price=' + $(this).val();" %>
+</div>
+<div style="width: 25%; float: left;">
+  <h3>Done?</h3>
+  <%= select_tag :not_done, options_for_select([['Not Done', nil], ["Done", true]], selected: @done), onchange: "window.location = '/products?#{params.permit!.except(:action, :controller, :done).to_query}&done=' + $(this).val();" %>
 </div>
 
 <div style="display: table; content: ''; clear: both;"></div>
 
 <div style="float: left; text-align: center; width: 100%;">
   <% @products.page(1).total_pages.times do |time| %>
-  <p style="display: inline-block; margin: 0;"><%= link_to (time + 1), "/products?#{params.permit!.except(:action, :controller, :page_number).to_query}&page_number=#{time + 1}" %> |</p>
+    <% if time + 1 == @products.page(1).current_page %>
+      <p class="active" style="display: inline-block; margin: 0;"><%=(time + 1) %> |</p>
+    <% else %>
+      <p style="display: inline-block; margin: 0;"><%= link_to (time + 1), "/products?#{params.permit!.except(:action, :controller, :page_number).to_query}&page_number=#{time + 1}" %> |</p>
+    <% end %>
   <% end %>
 </div>
 
 <div style="display: table; content: ''; clear: both;"></div>
 
 <% @products.each do |product| %>
-  <div style="width: 33%; float: left; padding: 15px; box-sizing: border-box;">
+  <div style="width: 33%; float: left; padding: 15px; box-sizing: border-box;" id="product_<%= product.id %>">
     <h2><%= product.name %></h2>
     <%= link_to edit_product_path(product) do %>
       <img src="<%= product.thumbnail %>" style="max-width:100%; height: 500px;">
@@ -38,6 +47,10 @@
       <%= f.text_area :description %>
       <%= f.label :price %>
       <%= f.text_field :price %>
+      <br>
+      <br>
+      <div id="product_submit_<%= product.id %>"></div>
+      <%= f.submit "Submit" %>
     </div>
     <div style="width: 50%; float: left;">
       <% Category.all.each do |category| %>
@@ -46,8 +59,6 @@
         <br>
       <% end %>
     </div>
-      <div id="product_<%= product.id %>"></div>
-      <%= f.submit "Submit" %>
     <% end %>
     <p><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></p>
   </div>
@@ -55,6 +66,10 @@
 
 <div style="float: left; width: 100%; text-align: center;">
   <% @products.page(1).total_pages.times do |time| %>
-  <p style="display: inline-block; margin: 0;"><%= link_to (time + 1), "/products?#{params.permit!.except(:action, :controller, :page_number).to_query}&page_number=#{time + 1}" %> |</p>
+    <% if time + 1 == @products.page(1).current_page %>
+      <p class="active" style="display: inline-block; margin: 0;"><%= link_to (time + 1), "/products?#{params.permit!.except(:action, :controller, :page_number).to_query}&page_number=#{time + 1}" %> |</p>
+    <% else %>
+      <p style="display: inline-block; margin: 0;"><%= link_to (time + 1), "/products?#{params.permit!.except(:action, :controller, :page_number).to_query}&page_number=#{time + 1}" %> |</p>
+    <% end %>
   <% end %>
 </div>
