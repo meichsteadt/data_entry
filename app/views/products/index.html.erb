@@ -23,7 +23,7 @@
 
 <div style="float: left; text-align: center; width: 100%;">
   <% @products.page(1).total_pages.times do |time| %>
-    <% if time + 1 == @products.page(1).current_page %>
+    <% if time + 1 == @products.current_page %>
       <p class="active" style="display: inline-block; margin: 0;"><%=(time + 1) %> |</p>
     <% else %>
       <p style="display: inline-block; margin: 0;"><%= link_to (time + 1), "/products?#{params.permit!.except(:action, :controller, :page_number).to_query}&page_number=#{time + 1}" %> |</p>

@@ -21,8 +21,8 @@ class ProductsController < ApplicationController
       @done = true
       @products = @products.where(done: true)
     end
-    if params[:page]
-      @products = @products.page(params[:page])
+    if params[:page_number]
+      @products = @products.page(params[:page_number])
     else
       @products = @products.page(1)
     end
