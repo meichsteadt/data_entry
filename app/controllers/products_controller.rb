@@ -20,6 +20,8 @@ class ProductsController < ApplicationController
     if params[:done] && params[:done] != ""
       @done = true
       @products = @products.where(done: true)
+    else
+      @products = @products.where(done: false)
     end
     if params[:page_number]
       @products = @products.page(params[:page_number])
