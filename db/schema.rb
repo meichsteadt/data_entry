@@ -36,11 +36,11 @@ ActiveRecord::Schema.define(version: 20180116062931) do
     t.string   "description"
     t.string   "brand"
     t.string   "dimensions"
-    t.string   "images",                   array: true
+    t.string   "images",                                   array: true
     t.string   "thumbnail"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.boolean  "done"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.boolean  "done",        default: false
   end
 
   create_table "users", force: :cascade do |t|
